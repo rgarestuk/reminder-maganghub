@@ -450,24 +450,30 @@ export default function App() {
 
       {/* Floating In-App Notification Toast */}
       {activeToast && (
-        <div className="fixed top-6 right-6 z-[9999] max-w-md w-full animate-in slide-in-from-top-4 duration-300">
-          <div className="bg-slate-900/95 border-2 border-amber-500/60 rounded-2xl p-4 shadow-2xl backdrop-blur-md flex items-start gap-3.5 ring-4 ring-amber-500/10">
-            <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-400 shrink-0 mt-0.5 animate-bounce">
+        <div
+          className="fixed z-[9999] pointer-events-none transition-all duration-300 inset-x-3 sm:inset-x-auto sm:right-6 sm:left-auto sm:w-full sm:max-w-md"
+          style={{
+            top: "clamp(4.75rem, calc(env(safe-area-inset-top, 0px) + 4.5rem), 7rem)",
+          }}
+        >
+          <div className="pointer-events-auto bg-slate-900/98 border-2 border-amber-500/80 rounded-2xl p-4 sm:p-4.5 shadow-2xl backdrop-blur-xl flex items-start gap-3 sm:gap-3.5 ring-4 ring-amber-500/20">
+            <div className="p-2 sm:p-2.5 rounded-xl bg-amber-500/20 text-amber-400 shrink-0 mt-0.5 animate-bounce">
               <AlertTriangle className="w-5 h-5" />
             </div>
-            <div className="flex-1 space-y-1">
-              <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-amber-400 uppercase tracking-wider">
+            <div className="flex-1 min-w-0 space-y-1.5">
+              <div className="flex items-center justify-between gap-2">
+                <h4 className="text-xs font-bold text-amber-400 uppercase tracking-wider truncate">
                   {activeToast.title}
                 </h4>
                 <button
                   onClick={() => setActiveToast(null)}
-                  className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer shrink-0"
+                  aria-label="Tutup notifikasi"
                 >
-                  <CloseIcon className="w-3.5 h-3.5" />
+                  <CloseIcon className="w-4 h-4" />
                 </button>
               </div>
-              <p className="text-sm font-semibold text-slate-100 leading-snug">
+              <p className="text-xs sm:text-sm font-semibold text-slate-100 leading-snug break-words">
                 {activeToast.body}
               </p>
               <div className="pt-2 flex items-center justify-end gap-2">
@@ -476,7 +482,7 @@ export default function App() {
                     setActiveToast(null);
                     setIsLogbookModalOpen(true);
                   }}
-                  className="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 flex items-center gap-1.5 transition shadow-sm cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 flex items-center justify-center gap-1.5 transition shadow-sm cursor-pointer active:scale-[0.98]"
                 >
                   <span>Buka Form Logbook</span>
                   <ArrowRight className="w-3.5 h-3.5" />
