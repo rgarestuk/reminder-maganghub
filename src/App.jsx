@@ -104,7 +104,12 @@ export default function App() {
   const playNotificationSound = () => {
     if (settings?.enableAudioAlert === false) return;
     try {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtxClass) return;
+      const audioCtx = new AudioCtxClass();
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = "sine";
@@ -132,17 +137,24 @@ export default function App() {
         ? customBody
         : "isi absen buruan daripada kena potong gaji!";
 
-    // 1. Bunyikan Suara Chime Audio
+    // 1. Getar perangkat jika didukung (Mobile Vibration)
+    try {
+      if (typeof navigator !== "undefined" && navigator.vibrate) {
+        navigator.vibrate([200, 100, 200]);
+      }
+    } catch {}
+
+    // 2. Bunyikan Suara Chime Audio
     playNotificationSound();
 
-    // 2. Munculkan In-App Toast Banner di layar
+    // 3. Munculkan In-App Toast Banner di layar
     setActiveToast({
       id: Date.now(),
       title,
       body,
     });
 
-    // 3. Picu Native Web Browser / OS Desktop Notification
+    // 4. Picu Native Web Browser / OS Desktop Notification jika didukung
     if (typeof window !== "undefined" && "Notification" in window) {
       let permission = Notification.permission;
       if (permission === "default") {
@@ -165,7 +177,8 @@ export default function App() {
             notif.close();
           };
         } catch (err) {
-          console.warn("Desktop notification display error:", err);
+          // Normal pada sebagian browser mobile (misal Android Chrome memerlukan ServiceWorker)
+          console.warn("Native Notification constructor note:", err);
         }
       }
     }
