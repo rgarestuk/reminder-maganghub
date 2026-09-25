@@ -1,0 +1,99 @@
+{
+  "settings": {
+    "telegramBotToken": "",
+    "telegramChatId": "",
+    "discordWebhookUrl": "",
+    "enableMorningReminder": true,
+    "morningTime": "08:30",
+    "enableAfternoonReminder": true,
+    "afternoonTime": "16:30",
+    "enableEscalation": true,
+    "escalationIntervalMinutes": 30,
+    "escalationStartTime": "17:00",
+    "escalationEndTime": "20:00",
+    "workDaysOnly": true,
+    "workDays": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "enableWebNotification": true,
+    "enableAudioAlert": true,
+    "logbookTime": "17:00"
+  },
+  "today": {
+    "date": "2026-09-25",
+    "checkedIn": false,
+    "checkInTime": null,
+    "logbookSubmitted": false,
+    "logbookSubmitTime": null,
+    "quickDraft": "",
+    "status": "RED"
+  },
+  "logbooks": [
+    {
+      "id": "log_1790308634572",
+      "date": "2026-09-25",
+      "submitTime": "10:57",
+      "activity": "v",
+      "notes": "",
+      "durationHours": 8,
+      "status": "COMPLETED"
+    },
+    {
+      "id": "log_1790306966947",
+      "date": "2026-09-25",
+      "submitTime": "10:29",
+      "activity": "11",
+      "notes": "",
+      "durationHours": 8,
+      "status": "COMPLETED"
+    },
+    {
+      "id": "log_1790306928325",
+      "date": "2026-09-25",
+      "submitTime": "10:28",
+      "activity": "v",
+      "notes": "",
+      "durationHours": 8,
+      "status": "COMPLETED"
+    }
+  ],
+  "templates": [
+    {
+      "id": "1",
+      "label": "🎨 Slicing UI",
+      "content": "Mengerjakan slicing desain UI ke komponen React & Tailwind CSS."
+    },
+    {
+      "id": "2",
+      "label": "🐛 Bug Fixing",
+      "content": "Investigasi dan perbaikan bug pada flow data dan responsive layout."
+    },
+    {
+      "id": "3",
+      "label": "👥 Daily Standup",
+      "content": "Mengikuti rapat harian (standup meeting), update progres dan blocker."
+    },
+    {
+      "id": "4",
+      "label": "🔍 Code Review",
+      "content": "Review pull request tim dan penyesuaian standard code formatting."
+    },
+    {
+      "id": "5",
+      "label": "📝 Dokumentasi",
+      "content": "Menulis dokumentasi teknis fitur dan update panduan integrasi API."
+    }
+  ],
+  "streak": {
+    "currentStreak": 1,
+    "longestStreak": 1,
+    "lastCompletedDate": "2026-09-25"
+  },
+  "heatmap": {
+    "2026-09-25": 3
+  }
+}
