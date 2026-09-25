@@ -1,4 +1,3 @@
-import cron from "node-cron";
 import { getDb, updateTodayStatus } from "./db.js";
 
 let cronJobs = [];
@@ -10,7 +9,19 @@ export function isWorkDay(date = new Date()) {
   return (db.settings.workDays || [1, 2, 3, 4, 5]).includes(day);
 }
 
-export function initScheduler() {
+export async function initScheduler() {
+  // Scheduler cron hanya jalan di environment yang punya persistent process (lokal/Render).
+  // Di Vercel serverless, cron tidak bisa berjalan karena fungsinya stateless.
+  if (process.env.VERCEL) {
+    console.log(
+      "⚠️ Vercel detected — cron scheduler dinonaktifkan (gunakan Vercel Cron Jobs jika diperlukan).",
+    );
+    return;
+  }
+
+  // Hanya import node-cron di environment non-serverless
+  const { default: cron } = await import("node-cron");
+
   // Clear existing jobs
   cronJobs.forEach((job) => job.stop());
   cronJobs = [];

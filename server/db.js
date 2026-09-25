@@ -4,12 +4,19 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const DB_FILE = path.join(__dirname, "..", "data", "db.json");
 
-// Pastikan direktori data ada
-const dataDir = path.dirname(DB_FILE);
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
+// Pada Vercel serverless, filesystem read-only kecuali /tmp
+const isVercel = !!process.env.VERCEL;
+const DB_FILE = isVercel
+  ? path.join("/tmp", "db.json")
+  : path.join(__dirname, "..", "data", "db.json");
+
+// Pastikan direktori data ada (hanya untuk lokal, /tmp sudah ada di Vercel)
+if (!isVercel) {
+  const dataDir = path.dirname(DB_FILE);
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+  }
 }
 
 // Skema default
@@ -18,11 +25,6 @@ const defaultData = {
     // Web Browser Notifications
     enableWebNotification: true,
     enableAudioAlert: true,
-
-    // WhatsApp Integration
-    enableWhatsappNotification: true,
-    whatsappNumber: "", // Contoh: 08123456789
-    whatsappApiToken: "", // Token Fonnte / Gateway (opsional)
 
     // Logbook & Escalation Timing
     enableLogbookReminder: true,
@@ -42,38 +44,6 @@ const defaultData = {
     status: "RED", // RED, YELLOW, GREEN
   },
   logbooks: [],
-  templates: [
-    {
-      id: "1",
-      label: "🎨 Slicing UI",
-      content:
-        "Mengerjakan slicing desain UI ke komponen React & Tailwind CSS.",
-    },
-    {
-      id: "2",
-      label: "🐛 Bug Fixing",
-      content:
-        "Investigasi dan perbaikan bug pada flow data dan responsive layout.",
-    },
-    {
-      id: "3",
-      label: "👥 Daily Standup",
-      content:
-        "Mengikuti rapat harian (standup meeting), update progres dan blocker.",
-    },
-    {
-      id: "4",
-      label: "🔍 Code Review",
-      content:
-        "Review pull request tim dan penyesuaian standard code formatting.",
-    },
-    {
-      id: "5",
-      label: "📝 Dokumentasi",
-      content:
-        "Menulis dokumentasi teknis fitur dan update panduan integrasi API.",
-    },
-  ],
   streak: {
     currentStreak: 0,
     longestStreak: 0,

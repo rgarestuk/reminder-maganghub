@@ -1,13 +1,22 @@
 import express from "express";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 import { getDb, saveDb, updateTodayStatus } from "./db.js";
 import { initScheduler } from "./scheduler.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
+
+// Serve static frontend build files in production
+const distPath = path.join(__dirname, "..", "dist");
+app.use(express.static(distPath));
 
 // Inisialisasi status hari ini dan schedule cron
 updateTodayStatus();
@@ -33,15 +42,9 @@ app.post("/api/drafts/save", (req, res) => {
   res.json({ success: true, today: db.today });
 });
 
-// --- 3. TEMPLATES ---
-app.get("/api/templates", (req, res) => {
-  const db = getDb();
-  res.json(db.templates || []);
-});
-
-// --- 4. LOGBOOK SUBMISSION & HISTORY ---
+// --- 3. LOGBOOK SUBMISSION & HISTORY ---
 app.post("/api/logbooks/submit", (req, res) => {
-  const { activity, learnings, obstacles, notes, durationHours } = req.body;
+  const { activity, learnings, obstacles } = req.body;
   const db = getDb();
   const now = new Date();
   const todayStr = now.toISOString().split("T")[0];
@@ -105,7 +108,7 @@ app.get("/api/logbooks", (req, res) => {
   res.json(db.logbooks || []);
 });
 
-// --- 5. SETTINGS ---
+// --- 4. SETTINGS ---
 app.get("/api/settings", (req, res) => {
   const db = getDb();
   res.json(db.settings);
@@ -172,8 +175,17 @@ app.post("/api/logbooks/clear", (req, res) => {
   res.json({ success: true, logbooks: [] });
 });
 
-app.listen(PORT, () => {
-  console.log(
-    `🚀 MagangHub Backend Server berjalan di http://localhost:${PORT}`,
-  );
+// Wildcard fallback untuk SPA React
+app.get("*", (req, res) => {
+  res.sendFile(path.join(distPath, "index.html"));
 });
+
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    console.log(
+      `🚀 MagangHub Backend Server berjalan di http://localhost:${PORT}`,
+    );
+  });
+}
+
+export default app;
